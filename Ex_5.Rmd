@@ -1,0 +1,36 @@
+---
+title: "Junca_E5"
+author: "Carolina Junca"
+date: "3/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, dev = "png",  dpi = 100)
+
+```
+
+## Exercises
+Save all the graphics in the folder “results” in png format with a resolution of 100 dpi.
+
+### Exercise 1
+For the data InsectSpray, make a table for the number of insects for each spray with the mean, median and standard error.
+
+```{r}
+for (i in levels (as.factor(InsectSprays$spray))){
+  SS <- subset.data.frame(InsectSprays, subset = InsectSprays$spray == i)
+}
+  
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+```{r}
+knitr::
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
