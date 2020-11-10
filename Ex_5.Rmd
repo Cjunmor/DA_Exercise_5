@@ -15,14 +15,43 @@ Save all the graphics in the folder “results” in png format with a resolutio
 
 ### Exercise 1
 For the data InsectSpray, make a table for the number of insects for each spray with the mean, median and standard error.
-
 ```{r}
-for (i in levels (as.factor(InsectSprays$spray))){
-  SS <- subset.data.frame(InsectSprays, subset = InsectSprays$spray == i)
-}
-  
-```
+#Table with general mean, median and standard error
+# x <- (InsectSprays$count)
+# mn <- mean(x)
+# s_e <- sd(x)/sqrt(length(x))
+# mdn <- median(x)
+# df <- data.frame(InsectSprays$spray,x,mn,s_e,mdn)
 
+for (i in (InsectSprays$count ~ InsectSprays$spray)){
+  print (i)
+  mn <- c(mn, mean(i))
+  s_e <- c(s_e, sd(i)/sqrt(length(i)))
+  mdn <- c(mdn,median(i))
+  df <- data.frame(mn,s_e,mdn)
+}
+plot(InsectSprays$count ~ InsectSprays$spray)
+# mn <- numeric()
+# s_e <- numeric()
+# mdn <- numeric()
+# for (i in levels (as.factor(InsectSprays$spray))){
+#   SS <- subset.data.frame(InsectSprays, subset = InsectSprays$spray == i)
+#   x <- (SS$count)
+#   mn <- c(mn, mean(x))
+#   s_e <- c(s_e, sd(x)/sqrt(length(x)))
+#   mdn <- c(mdn,median(x))
+    # df <- data.frame(x,mn,s_e,mdn)
+    # Df <- c(df, )
+# }
+#df <- data.frame(x,mn,s_e,mdn)
+```
+###Exercise 2
+Print a plot to see the differences of counts between sprays. Include a caption explaining the figure. Which type of plot is the one you choose and why?
+```{r}
+plot(df)
+my.table <- trees[1:5, ]
+
+knitr::kable(my.table, caption = “Table 1. Five first rows of the trees dataframe from base R.”)
 ## Including Plots
 
 You can also embed plots, for example:
