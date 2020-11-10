@@ -20,7 +20,7 @@ Save all the graphics in the folder “results” in png format with a resolutio
 ### Exercise 1
 For the data InsectSpray, make a table for the number of insects for each spray with the mean, median and standard error.
 
-```{r}
+``{r}
 #Table with general mean, median and standard error
 IS <- InsectSprays
 mn <- numeric()
@@ -47,4 +47,43 @@ Print a plot to see the differences of counts between sprays. Include a caption 
 cap <- "Figure 1: Relationships between different sprays and insect counts."
 
 plot(InsectSprays$count ~ InsectSprays$spray)
+```
+
+### Exercise 3
+Test for differences between sprays using anova and a posthoc comparison and redo the previous plot including the representation of all posthoc differences.
+ANOVA
+
+```{r}
+```
+
+### Exercise 4
+Test for differences between sprays using non-parametric Kruskal-Wallis rank sum test. Again, redo the plot with these results.
+
+```{r}
+
+
+```
+
+### Exercise 5
+Transform count data using sqrt(counts) and redo the anova, the Tukey posthoc comparison and the plot.
+
+```{r}
+
+
+```
+
+### Exercise 6
+Test for normality of residuals for the two performed anova analyses of points 4 and 6 using shapiro.test() and use plot the anova to see the qqplots and compare them.
+
+```{r}
+
+
+```
+
+### Exercise 7
+Which of the previous analysis is the adequate in this case? Why? Is there any difference in the results between the square root transformed ANOVA and the Kruskal-Wallis analyses? Is there any difference in the results between the direct ANOVA and the square root transformed ANOVA? Which ones?
+
+```{r}
+
+
 ```
