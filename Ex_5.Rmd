@@ -20,7 +20,7 @@ Save all the graphics in the folder “results” in png format with a resolutio
 ### Exercise 1
 For the data InsectSpray, make a table for the number of insects for each spray with the mean, median and standard error.
 
-``{r}
+```{r}
 #Table with general mean, median and standard error
 IS <- InsectSprays
 mn <- numeric()
@@ -40,50 +40,58 @@ knitr::kable(df, caption = "Table 1. Mean (mn), standard error (s_e) and median 
 ```
 
 ### Exercise 2
-Print a plot to see the differences of counts between sprays. Include a caption explaining the figure. Which type of plot is the one you choose and why?
+Print a plot to see the differences of counts between sprays. Include a caption explaining the figure. 
 
 ```{r, fig.cap=cap}
-
-cap <- "Figure 1: Relationships between different sprays and insect counts."
-
-plot(InsectSprays$count ~ InsectSprays$spray)
+plot((InsectSprays$count ~ InsectSprays$spray), ylab="Insect count",
+        xlab= "Type of spray",
+cap <- "Figure 1: Relationships between different sprays and insect counts.",
+legend( x = "top", 
+       legend = paste("spray", as.character(df$n))))
 ```
+
+#### Which type of plot is the one you choose and why?
+
 
 ### Exercise 3
 Test for differences between sprays using anova and a posthoc comparison and redo the previous plot including the representation of all posthoc differences.
-ANOVA
+
+For the anova use the command aov() and for the posthoc comparison use the Tukey’s ‘Honest Significant Difference’ with the TukeyHSD() and agricolae::HSD.test(). See the differences between both methods.
 
 ```{r}
+ANOVA <- aov(IS$count ~ IS$spray, data= IS)
+print(summary(ANOVA))
+
 ```
 
 ### Exercise 4
 Test for differences between sprays using non-parametric Kruskal-Wallis rank sum test. Again, redo the plot with these results.
 
-```{r}
-
-
-```
+# ```{r}
+# 
+# 
+# ```
 
 ### Exercise 5
 Transform count data using sqrt(counts) and redo the anova, the Tukey posthoc comparison and the plot.
 
-```{r}
-
-
-```
+# ```{r}
+# 
+# 
+# ```
 
 ### Exercise 6
 Test for normality of residuals for the two performed anova analyses of points 4 and 6 using shapiro.test() and use plot the anova to see the qqplots and compare them.
 
-```{r}
-
-
-```
+# ```{r}
+# 
+# 
+# ```
 
 ### Exercise 7
 Which of the previous analysis is the adequate in this case? Why? Is there any difference in the results between the square root transformed ANOVA and the Kruskal-Wallis analyses? Is there any difference in the results between the direct ANOVA and the square root transformed ANOVA? Which ones?
 
-```{r}
-
-
-```
+# ```{r}
+# 
+# 
+# ```
