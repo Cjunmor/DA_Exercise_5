@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, dev = "png",  dpi = 100)
+knitr::opts_chunk$set(echo = TRUE, suffix = ".png", fig.path = "results/", res = 100)
 
 # install.packages("ggplot2")
 # install.packages("multcompView")
@@ -42,56 +42,115 @@ knitr::kable(df, caption = "Table 1. Mean (mn), standard error (s_e) and median 
 ### Exercise 2
 Print a plot to see the differences of counts between sprays. Include a caption explaining the figure. 
 
-```{r, fig.cap=cap}
-plot((InsectSprays$count ~ InsectSprays$spray), ylab="Insect count",
-        xlab= "Type of spray",
-cap <- "Figure 1: Relationships between different sprays and insect counts.",
-legend( x = "top", 
-       legend = paste("spray", as.character(df$n))))
+```{r,include=TRUE, fig.cap=cap}
+plot((InsectSprays$count ~ InsectSprays$spray),
+     ylab="Insect count", xlab= "Spray type", main= "Insect count after spray type application")
+cap <- "Figure 1: Relationships between different sprays and insect counts."
 ```
 
-#### Which type of plot is the one you choose and why?
+*Which type of plot is the one you choose and why?*
+I choose a box plot because it does not only show the range of the insects found after application, it also shows the median and also the outliers
 
 
 ### Exercise 3
+
 Test for differences between sprays using anova and a posthoc comparison and redo the previous plot including the representation of all posthoc differences.
 
-For the anova use the command aov() and for the posthoc comparison use the Tukey’s ‘Honest Significant Difference’ with the TukeyHSD() and agricolae::HSD.test(). See the differences between both methods.
+For the anova use the command aov() and for the posthoc comparison use the Tukey’s ‘Honest Significant Difference’ with the TukeyHSD() and agricolae::HSD.test(). See the differences between both commands.
 
+#### ANOVA analisis with aov ()
 ```{r}
 ANOVA <- aov(IS$count ~ IS$spray, data= IS)
 print(summary(ANOVA))
 
 ```
 
+#### Posthoc test: Tukey’s ‘Honest Significant Difference’ test
+##### TukeyHSD() function
+```{r}
+T_hsd <- TukeyHSD(x=ANOVA, 'IS$spray', conf.level=0.95)
+plot(T_hsd , las=1 , col="red")
+
+bpt1 <- boxplot((InsectSprays$count ~ InsectSprays$spray),
+     ylab="Insect count", xlab= "Spray type", main = "ANOVA with TukeyHSD() groups")
+
+text(x = 1:6, y= 28, c("a","a","b","b","b","a"))
+
+```
+
+##### Agricolae::HSD.test() function
+
+```{r}
+T_agri <- HSD.test(ANOVA, 'IS$spray', alpha = 0.05, group=TRUE, main = "Agricolae::HSD.test()")
+plot(T_agri)
+```
+
+*Differences between both commands:*
+Both commands use the ANOVA analysis and its data to construct groups in which no significant differences are found between its members. Although both came to the same conclusions (FBA form one group and DEC form another), the agricolae function manage to present it in a much more comprehensible way when plotted. 
+
 ### Exercise 4
 Test for differences between sprays using non-parametric Kruskal-Wallis rank sum test. Again, redo the plot with these results.
 
-# ```{r}
-# 
-# 
-# ```
+```{r}
+kw <- kruskal(IS$count, IS$spray, alpha = 0.05)
+plot(kw, las=1, main = "Kruskal-Wallis rank sum test for raw data")
+```
+
+*Findings:*
+The test seems to find three groups instead of two, which leads me to believe it is more restrictive or more sensitive to differences.
 
 ### Exercise 5
 Transform count data using sqrt(counts) and redo the anova, the Tukey posthoc comparison and the plot.
 
-# ```{r}
-# 
-# 
-# ```
+```{r}
+sq_c <- sqrt(IS$count)
+sqIS <- data.frame(sq_c, IS$spray)
+
+#ANOVA and Tukey
+sq_anova <- aov(sqIS$sq_c ~ sqIS$IS.spray)
+sq_T <- HSD.test(sq_anova, 'sqIS$IS.spray')
+plot(sq_T, main = "Tukey for square root transformed data") 
+
+```
+
+*Findings:*
+When squared, the HSD.test() does separate the count data into 3 separate groups.
 
 ### Exercise 6
 Test for normality of residuals for the two performed anova analyses of points 4 and 6 using shapiro.test() and use plot the anova to see the qqplots and compare them.
+####Normality of ANOVA residuals from raw data
+```{r}
+shapiro.test(ANOVA$residuals)
 
-# ```{r}
-# 
-# 
-# ```
+qqnorm(ANOVA$residuals)
+qqline(ANOVA$residuals)
+```
+*Findings:*
+According to the P value of the Shapiro test, the residuals of the raw data do not follow a normal distribution (p value < 0.05, confidence 95%).
+
+####Normality of ANOVA residuals from squared data (count)
+
+```{r}
+shapiro.test(sq_anova$residuals)
+
+qqnorm(sq_anova$residuals)
+qqline(sq_anova$residuals)
+```
+
+*Findings:*
+According to the P value of the Shapiro test, the residuals of the squared data do follow a normal distribution (p value > 0.05, confidence 95%).
 
 ### Exercise 7
-Which of the previous analysis is the adequate in this case? Why? Is there any difference in the results between the square root transformed ANOVA and the Kruskal-Wallis analyses? Is there any difference in the results between the direct ANOVA and the square root transformed ANOVA? Which ones?
+*Which of the previous analysis is the adequate in this case? Why? *
 
-# ```{r}
-# 
-# 
-# ```
+If you want to use a parametric analysis then you should transform the data into their squared values, nevertheless if you dont want to manipulate the data for you to understand better the values at a glance, use the non parametric Kruskal-Wallis rank sum test.
+
+*Is there any difference in the results between the square root transformed ANOVA and the Kruskal-Wallis analyses?*
+
+Not in the graphs ans results shown, the only difference is the data they work with (one being comprehensible at a glance by the researcher, while the other not).
+
+*Is there any difference in the results between the direct ANOVA and the square root transformed ANOVA? Which ones?*
+
+Yes, the direct ANOVA separates the data in only two groups, while the square root transformed ANOVA separates them into three. 
+
+The direct ANOVA is not fit for the raw data as its residuals do not follow a normal distribution.
